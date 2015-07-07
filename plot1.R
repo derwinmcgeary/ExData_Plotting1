@@ -22,34 +22,25 @@ if(file.exists(toString(unzip(zipfile,list = TRUE)[1]))){
 # And let's get this data into R!
 # optimising the read with tricks from
 # http://www.biostat.jhsph.edu/~rpeng/docs/R-large-tables.html
+## This should be an efficient way to read the file into R
+# > system.time(source("plot1.R")) # for example
+#  user  system elapsed 
+# 0.392   0.008   0.398 
 
 tab5rows <- read.table(datafile, header = TRUE, sep = ";", nrows = 5)
 classes <- sapply(tab5rows, class)
-print("Starting alldata read")
-alldata <- read.table(datafile, 
+
+ourdata <- read.table(datafile, 
                       header = TRUE, 
                       sep = ";", 
                       na.strings = "?", 
-                      nrows = 2075260, 
-                      colClasses=classes)
-print("Done! Starting altdata read...")
-altdata <- read.table(datafile, 
-                      header = TRUE, 
-                      sep = ";", 
-                      na.strings = "?", 
-                      skip=66636,
-                      nrows = 2880,
+                      skip=66636, # These numbers correspond to values
+                      nrows = 2880, # for dates 2007-02-01 and 2007-02-02
                       colClasses=classes,
                       col.names=colnames(tab5rows))
-print("Done! Subsetting alldata...")
-alldata$Date <- as.Date(strptime(alldata$Date, "%d/%m/%Y")) # from Factor to Date object
-alldata$Time <- strptime(alldata$Time, "%H:%M:%S")
 
-ourdates <- as.Date(strptime(c("2007-02-01", "2007-02-02"),"%Y-%m-%d"))
-ourdata <- subset(alldata,alldata$Date%in%ourdates)
-print("Done!")
-rm(alldata)
-ourdata <- altdata
+ourdata$Date <- as.Date(strptime(ourdata$Date, "%d/%m/%Y")) # from Factor to Date object
+ourdata$Time <- strptime(ourdata$Time, "%H:%M:%S")
 
 ## Plot the data
 png(filename="plot1.png")
@@ -57,7 +48,4 @@ hist(ourdata$Global_active_power,
      main = "Global Active Power",
      xlab = "Global Active Power (kilowatts)",
      col = "red")
-# axis(1)
-# par(yaxp=c(0,1200,6), ps=9)
-# axis(2)
 dev.off()
