@@ -2,8 +2,8 @@
 if('downloader'%in%installed.packages()[,1]){
   library("downloader")
 } else {
-install.packages("downloader")
-library("downloader")
+  install.packages("downloader")
+  library("downloader")
 }
 
 # We don't want to download 20MB every time! If you already have the file, you can rename it to
@@ -41,11 +41,7 @@ ourdata <- read.table(datafile,
 
 ourdata$DateTime <- paste(ourdata$Date," ",ourdata$Time)
 ourdata$DateTime <- strptime(ourdata$DateTime, "%d/%m/%Y %H:%M:%S")
-
 ## Plot the data
-png(filename="plot1.png")
-hist(ourdata$Global_active_power, 
-     main = "Global Active Power",
-     xlab = "Global Active Power (kilowatts)",
-     col = "red")
+png("plot2.png")
+with(ourdata, plot(DateTime,Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)"))
 dev.off()
