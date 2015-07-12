@@ -46,7 +46,7 @@ ourcols <- ourdata[c(10,7,8,9)]
 png("plot4.png")
 par(mfrow = c(2,2))
 #plot 1
-with(ourdata, plot(DateTime,Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)"))
+with(ourdata, plot(DateTime,Global_active_power, type="l", xlab="", ylab="Global Active Power"))
 #plot 2
 with(ourdata, plot(DateTime,Voltage, type="l", xlab="datetime", ylab="Voltage"))
 #plot 3
